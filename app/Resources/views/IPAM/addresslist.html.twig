@@ -1,0 +1,144 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+  <form name="IPs" method="post" action="{{path('addresslist', {'id': network})}}">
+  <table class="table table-hover">
+  <thead>
+    <tr>
+      <th></th>
+      <th scope="col">IP address</th>
+      <th scope="col"></th>
+      <th scope="col">Hostname</th>
+      <th scope="col">MAC/ID</th>
+      <th scope="col">Description</th>
+      <th scope="col">Last modified</th>
+      <th colspan="2" scope="col" ><a href="{{path('nextaddressassign', {'network': network})}}" class="btn btn-success btn-sm" style="float:right;">Assign next free IP</a></th>
+    </tr>
+    </thead>
+    <tbody>   
+    <fieldset>
+    {% if schema is defined %}
+        {% for address in schema %}
+            {% set found = false %}
+            {% for entry in addresslist %}
+                   {% if entry.ip == address %}
+                       {% set found = true %}
+                            <tr>
+                              <td><input type="checkbox" name="check[]" value="{{address}}"> </td>
+                              {% if entry.excluded == false %}
+                                  <td>{{entry.ip}}</td>
+                              {% else %}
+                                  <td><s>{{entry.ip}}</s></td>
+                              {% endif %}
+                              <td>
+                                    {% if entry.type == 0 %}
+                                        <span class="badge badge-pill badge-success">Free</span>
+                                    {% elseif entry.type == 1 %}
+                                        <span class="badge badge-pill badge-warning">IPAM - static</span>
+                                    {% elseif entry.type == 2 %}
+                                        <span class="badge badge-pill badge-primary">DHCP - reserved</span>
+                                    {% elseif entry.type == 3 %}
+                                        <span class="badge badge-pill badge-info">DHCP - dynamic</span>  
+                                    {% elseif entry.type == 4 %}
+                                        <span class="badge badge-pill badge-danger">Excluded</span>  
+                                    {% endif %}
+                                    {% if entry.gw == 1 %}
+                                        <span class="badge badge-pill badge-secondary">Gateway</span>   
+                                    {% endif %}   
+                              </td>
+                              {% if entry.excluded == false %}
+                                    <td class="text-nowrap">{{entry.device.hostname}}</td>
+                                    <td class="text-nowrap text-italic">{{entry.device.mac}}</td>
+                                    <td class="text-nowrap" style="font-size:10px">{{entry.description}}</td>
+                                    <td class="text-nowrap" style="font-size:12px">{{entry.modifydate|date('d-m-Y H:i')}}</td>
+                                    <td><a href="{{path('addressreclaim', {'id': entry.id})}}" class="btn btn-warning btn-sm">Reclaim</a></td>
+                                    <td><a href="{{path('addresshistory', {'ip': entry.ip, 'network': network})}}" class="btn btn-outline-dark btn-sm">History</a></td>
+                              {% else%}
+                                    <td class="text-nowrap"></td>
+                                    <td class="text-nowrap text-italic"></td>
+                                    <td class="text-nowrap" style="font-size:10px"></td>
+                                    <td class="text-nowrap" style="font-size:12px"></td>
+                                    <td></td>
+                                    <td></td>
+                              {% endif %}    
+                            </tr>
+                    {% endif %}
+            {% endfor %} 
+            {% if found == false %}
+                <tr>
+                          <td><input type="checkbox" name="check[]" value="{{address}}"> </td>
+                          <td>{{address}}</td>
+                          <td>
+                                 <span class="badge badge-pill badge-success">Free</span>
+                          </td>
+                          <td></td>
+                           <td></td>
+                          <td></td>
+                          <td></td>
+                          <td><a href="{{path('addressassign', {'ip': address, 'network': network})}}" class="btn btn-primary btn-sm">Assign</a></td>
+                          <td><a href="{{path('addresshistory', {'ip': address, 'network': network})}}" class="btn btn-outline-dark btn-sm">History</a></td>
+                        </tr>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+       {% for entry in addresslist %}
+                        <tr>
+                          <td><input type="checkbox" name="check[]" value="{{entry.ip}}"> </td>
+                          <td>{{entry.ip}}</td>
+                          <td>
+                                {% if entry.type == 0 %}
+                                    <span class="badge badge-pill badge-success">Free</span>
+                                {% elseif entry.type == 1 %}
+                                    <span class="badge badge-pill badge-warning">IPAM - static</span>
+                                {% elseif entry.type == 2 %}
+                                    <span class="badge badge-pill badge-primary">DHCP - reserved</span>
+                                {% elseif entry.type == 3 %}
+                                    <span class="badge badge-pill badge-info">DHCP - dynamic</span>  
+                                {% elseif entry.type == 4 %}
+                                        <span class="badge badge-pill badge-danger">Excluded</span>  
+                                {% endif %}
+                                {% if entry.gw == 1 %}
+                                        <span class="badge badge-pill badge-secondary">Gateway</span>   
+                                {% endif %} 
+                          </td>
+                          <td class="text-nowrap">{{entry.device.hostname}}</td>
+                          <td class="text-nowrap">{{entry.device.mac}}</td>
+                          <td class="text-nowrap" style="font-size:10px">{{entry.description}}</td>
+                          <td class="text-nowrap" style="font-size:12px">{{entry.modifydate|date('d-m-Y H:i')}}</td>
+                          <td><a href="{{path('addressreclaim', {'id': entry.id})}}" class="btn btn-warning btn-sm">Reclaim</a></td>
+                          <td><a href="{{path('addresshistory', {'ip': entry.ip, 'network': network})}}" class="btn btn-outline-dark btn-sm">History</a></td>
+                        </tr>
+        {% endfor %}    
+    {% endif %}
+    </fieldset>
+  </tbody>
+</table>
+<div style="margin-bottom:10px">
+    <button type="submit" class="btn btn-primary btn-sm" name="exclude" value="exclude" >Exclude</button>
+    <button type="submit" class="btn btn-outline-primary btn-sm" name="unexclude" value="unexclude" >Unexclude</button>
+    <button type="submit" class="btn btn-outline-danger btn-sm" name="reclaim" value="reclaim">Mass Reclaim</button>
+</div>   
+<div style="margin-bottom:10px">   
+    <button type="submit" class="btn btn-secondary btn-sm" name="gw" value="gw">Set/Unset default Gateway</button>
+</div> 
+{% if schema is defined %}    
+    <nav aria-label="Page navigation example">
+      <div class="pagination pagination-sm justify-content-center">
+        {{ knp_pagination_render(schema) }}
+      </div>
+    </nav>
+{% endif %}
+
+
+</form> 
+{% endblock %}
+
+
+{% block search %}
+    <div style="float:right; margin-right:10px; margin-top:10px">
+        {% include "IPAM/addresssearch.html.twig" %}
+    </div>
+{% endblock %}
+
+

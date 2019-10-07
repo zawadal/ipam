@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+ <div class="container">
+    <div class="row">
+        <div class="col-8">
+            <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Parameter</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Network</td>
+                <td>{{details['ip_address']['quads']}}</td>
+              </tr>
+             <tr>
+                <td>Mask decimal</td>
+                <td>{{details['subnet_mask']['quads']}}</td>
+              </tr>
+                 <tr>
+                <td>Mask bits</td>
+                <td>{{details['network_size']}}</td>
+              </tr>
+                 <tr>
+                <td>Network range</td>
+                <td>{{details['ip_address_range'][0]}} - {{details['ip_address_range'][1]}}</td>
+              </tr>
+              </tr>
+                 <tr>
+                <td>First usable IP</td>
+                <td>{{network.firstaddress}}</td>
+              </tr>
+              <tr>
+                <td>Last usable IP</td>
+                <td>{{network.lastaddress}}</td>
+              </tr>
+                 <tr>
+                <td>Broadcast address</td>
+                <td>{{details['broadcast_address']}}</td>
+              </tr>
+              <tr>
+                <td>Addressable hosts</td>
+                <td>{{details['number_of_addressable_hosts']}}</td> 
+               </tr>
+              <tr>
+                <td>Creation date</td>
+                <td>{{network.adddate|date('d-m-Y H:i')}}</td>
+              </tr>
+              <tr>
+                <td>Last modify date</td>
+                <td>{{network.modifydate|date('d-m-Y H:i')}}</td>
+              </tr>
+              <tr>
+                <td>Description</td>
+                <td>{{network.description}}</td>
+              </tr>
+            </tbody>
+            </table>
+    </div>
+    <div class="col-4">
+            <div id="div_chart"></div>
+    </div>
+  </div>
+           
+ <a href="{{path('networklist', {'customerid': app.session.get('context_id')})}}" class="btn btn-primary">Back</a>
+    
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+            {{ gc_draw(piechart, 'div_chart') }}
+    </script>   
+{% endblock %}

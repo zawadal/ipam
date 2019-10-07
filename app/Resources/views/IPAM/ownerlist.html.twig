@@ -1,0 +1,57 @@
+ {% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if owners %}
+        <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Unit/Departament</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Location</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Description</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in owners %}
+          <tr>
+            <td>{{entry.firstname}}</td>
+            <td>{{entry.lastname}}</td>
+            <td>{{entry.email}}</td>      
+            <td>{{entry.ou}}</td>
+            <td class="text-nowrap" style="font-size:12px">{{entry.phone}}</td>
+            <td>{{entry.location}}</td>
+            <td>{{entry.customer.name}}</td>
+            <td width="20%" style="font-size:12px">{{entry.description}}</td>
+            <td><a title="Edit" href="{{path('owneredit', {id: entry.id})}}"><i class="fas fa-edit fa-md"></i></a></td>
+            <td><a title="Remove" href="{{path('ownerdelete', {id: entry.id})}}" onclick="return confirm('Are You sure to delete this owner?')"><i class="fas fa-minus-circle fa-md"></i></a></td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+      <nav aria-label="Owners">
+            <div class="pagination pagination-sm justify-content-center">
+            {{ knp_pagination_render(owners) }}
+            </div>
+       </nav>
+ {% else  %}
+    <div>
+        <p>No owners available yet.</p>
+    </div>
+ {% endif %} 
+<a href="{{path('addowner')}}" class="btn btn-primary">Add owner</a>
+
+{% endblock %}
+
+
+{% block search %}
+    <div style="float:right; margin-right:10px; margin-top:10px">
+        {% include "IPAM/ownersearch.html.twig" %}
+    </div>
+{% endblock %}

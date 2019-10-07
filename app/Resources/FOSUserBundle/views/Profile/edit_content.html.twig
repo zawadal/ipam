@@ -1,0 +1,16 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+{{ form_start(form, { 'action': path('fos_user_profile_edit'), 'attr': { 'class': 'form-control' } }) }}
+    {{ form_row(form.username, {'attr': { 'class': 'form-control' } }) }}
+    {{ form_row(form.email, {'attr': { 'class': 'form-control' } }) }}
+    {{ form_row(form.firstname, {'attr': { 'class': 'form-control' } }) }}
+    {{ form_row(form.lastname, {'attr': { 'class': 'form-control' } }) }}
+    {{ form_row(form.description, {'attr': { 'class': 'form-control' } }) }}
+    <hr>
+     {{ form_row(form.current_password, {'attr': { 'class': 'form-control' } }) }}
+
+     
+    <div>
+        <input class="form-control btn btn-primary" type="submit" value="{{ 'profile.edit.submit'|trans }}" />
+    </div>
+{{ form_end(form) }}

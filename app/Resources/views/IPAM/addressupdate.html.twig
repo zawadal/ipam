@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme form _self %}
+
+{% block _address_assign_form_device_row %}
+    <div>
+        {{ form_label(form) }}
+        {{ form_errors(form) }}
+        <p>
+            <a class="btn btn-sm btn-success" href="{{path('adddevice')}}">Add new device</a>
+        </p>
+        {{ form_widget(form) }}
+    </div>
+{% endblock %}
+{% block body %}
+
+        <p>Metadata change for {{ip}}</p>
+        {{form_start(form)}}
+            {{form_row(form.description)}}
+            {{form_row(form.type)}}
+            {{form_row(form.device)}}
+            
+        {{form_end(form)}}
+
+{% endblock %}

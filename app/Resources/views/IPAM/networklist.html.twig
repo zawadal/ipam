@@ -1,0 +1,102 @@
+ {% extends 'base.html.twig' %}
+
+{% block body %}
+{% if networks is not empty and networks is not null %}
+        <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Network</th>
+            <th scope="col">Utilization</th>
+            <th scope="col">VLAN</th>
+            <th scope="col">Description</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Create date</th>
+            <th scope="col">Modify date</th>
+          </tr>
+        </thead>
+        <tbody>
+
+    {% for entry in networks %}
+    <tr>
+      <td><a class="btn btn-outline-dark btn-sm" href="{{path('addresslist', {'id': entry.id})}}">{{entry.net}}/{{entry.netmask}}</a></td>
+      <td>
+            {% set utilization = ((entry.IPAMutilization + entry.DHCPDynamicUtilization + entry.DHCPReservedUtilization)*100)/entry.maxhosts%}
+            <div class="progress">
+                {% if utilization < 70 %}
+                      <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{utilization}}%" aria-valuenow="{{utilization}}" aria-valuemin="0" aria-valuemax="100"></div>
+                {% elseif utilization < 90  %}
+                      <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: {{utilization}}%" aria-valuenow="{{utilization}}" aria-valuemin="0" aria-valuemax="100"></div>
+                {% else %}
+                      <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: {{utilization}}%" aria-valuenow="{{utilization}}" aria-valuemin="0" aria-valuemax="100"></div>
+                {% endif  %}
+           </div>
+      </td>
+      <td width="30%" style="font-size:12px">{{entry.vlanId}}</td>
+      <td width="30%" style="font-size:12px">{{entry.description}}</td>
+      <td width="30%" style="font-size:12px">{{entry.customer.name}}</td>
+      <td class="text-nowrap" style="font-size:12px">{{entry.adddate|date('d-m-Y H:i')}}</td>
+      <td class="text-nowrap" style="font-size:12px">{{entry.modifydate|date('d-m-Y H:i')}}</td>
+      <td><a href="{{path('networkremove', {id: entry.id})}}" class="btn btn-danger btn-sm" onclick="return confirm('Are You sure?')">Remove</a></td>
+      <td> <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#changeNetworkDescription-{{entry.id}}">Change</button></td>
+      <td><a href="{{path('networkdetails', {id: entry.id})}}" class="btn btn-primary btn-sm">Details</a></td>
+    </tr>
+    <form name="Desc" method="post" action="{{path('networkchange', {'id': entry.id})}}">
+        <!-- MODAL -->
+        <div class="modal fade" id="changeNetworkDescription-{{entry.id}}" tabindex="-1" role="dialog" aria-labelledby="changeNetworkDescription-{{entry.id}}" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="changeNetworkDescription-{{entry.id}}">Change network</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                    <div class="form-group">
+                      <label class="col-form-label" for="changeNetworkDescription{{entry.id}}">New description</label>                    
+                      <input name="description" type="textarea" class="form-control" id="changeNetworkDescription-{{entry.id}}" placeholder="{{entry.description}}">
+                    </div>
+                    <div class="form-group">
+                     <label class="col-form-label" for="changeNetworkDescription{{entry.vlanid}}">New VLAN</label>
+                      <input name="vlanid" type="edit" class="form-control" id="changeNetworkDescription-{{entry.vlanid}}" placeholder="{{entry.vlanid}}">
+                    </div>
+                    
+                    
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" name="change" value="{{entry.id}}">Change</button>
+            </div>
+          </div>
+          </div>
+        </div> 
+    </form>
+
+    {% endfor %}
+   
+  </tbody>
+</table>
+<nav aria-label="Networks">
+      <div class="pagination pagination-sm justify-content-center">
+        {{ knp_pagination_render(networks) }}
+      </div>
+</nav>
+
+{% else  %}
+    <div>
+        <p>No networks available yet or no networks in selected context</p>
+    </div>
+{% endif %}
+<a href="{{path('networkadd')}}" class="btn btn-primary">Add network</a>
+
+
+
+ 
+{% endblock %}
+
+
+{% block search %}
+    <div style="float:right; margin-right:10px; margin-top:10px">
+        {% include "IPAM/networksearch.html.twig" %}
+    </div>
+{% endblock %}

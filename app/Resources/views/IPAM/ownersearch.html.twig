@@ -1,0 +1,15 @@
+{% if (search is defined and search == true) %}
+    
+ <a title="Remove search" href="{{path('ownerlist')}}" class=" btn btn-sm btn-outline-danger"><i class="fas fa-minus-circle fa-sm text-danger"></i>Remove search</a>
+ 
+{% else %}
+    <nav class="navbar navbar-light bg-light justify-content-between">
+        <form class="form-inline" method="get" role="form" action="{{path('ownerlist')}}" >    
+                            <div class="form-group">
+                                <input class="form-control form-control-sm" type="search" name="search" placeholder="Owner search"/>
+                                <button  class="form-control btn btn-sm btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                            </div>      
+        </form>  
+    </nav>
+        
+{% endif %}

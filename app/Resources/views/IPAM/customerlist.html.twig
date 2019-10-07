@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{% if customers %}
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Address</th>
+      <th scope="col">Description</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in customers %}
+    <tr>
+      <td>{{entry.name}}</td>
+      <td>{{entry.street}} {{entry.building}} - {{entry.city}} {{entry.code}} {{entry.country}}</td>
+      <td width="30%" style="font-size:12px">{{entry.description}}</td>
+      <td><a title="Edit" href="{{path('customeredit', {id: entry.id})}}"><i class="fas fa-edit fa-lg"></i></a></td>
+      <td><a title="Remove" href="{{path('customerdelete', {id: entry.id})}}" onclick="return confirm('Are You sure to delete customer?')"><i class="fas fa-minus-circle fa-lg"></i></a></td>
+    </tr>
+    
+    {% endfor %}
+    
+  </tbody>
+</table>
+<nav aria-label="Dedvices">
+      <div class="pagination pagination-sm justify-content-center">
+        {{ knp_pagination_render(customers) }}
+      </div>
+</nav>
+{% else  %}
+    <div>
+        <p>No customers available yet.</p>
+    </div>
+{% endif %} 
+<a href="{{path('addcustomer')}}" class="btn btn-primary">Add Customer</a>
+
+{% endblock %}
+
+{% block search %}
+    <div style="float:right; margin-right:10px; margin-top:10px">
+        {% include "IPAM/customersearch.html.twig" %}
+    </div>
+{% endblock %}

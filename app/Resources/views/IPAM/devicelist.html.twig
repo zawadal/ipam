@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{% if devices %}
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Hostname</th>
+      <th scope="col">Type</th>
+      <th scope="col">Serial</th>
+      <th scope="col">MAC</th>
+      <th scope="col">Owner</th>
+      <th scope="col">Description</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in devices %}
+    <tr>
+      <td>{{entry.hostname}}</td>
+      <td>{{entry.type.name}}</td>
+      <td>{{entry.serial}}</td>
+      <td>{{entry.mac}}</td>
+      <td>{{entry.owner.firstname}} {{entry.owner.lastname}}</td>
+      <td width="30%" style="font-size:12px">{{entry.description}}</td>
+      <td><a title="Edit" href="{{path('deviceedit', {id: entry.id})}}"><i class="fas fa-edit fa-lg"></i></a></td>
+      <td><a title="Remove" href="{{path('devicedelete', {id: entry.id})}}" onclick="return confirm('This will also delete any IP address rollbacks connected to this device. Are You sure to delete? ')"><i class="fas fa-minus-circle fa-lg"></i></a></td>
+    </tr>
+    
+    {% endfor %}
+    
+  </tbody>
+</table>
+<nav aria-label="Dedvices">
+      <div class="pagination pagination-sm justify-content-center">
+        {{ knp_pagination_render(devices) }}
+      </div>
+</nav>
+{% else  %}
+    <div>
+        <p>No devices available yet.</p>
+    </div>
+{% endif %}    
+<a href="{{path('adddevice')}}" class="btn btn-primary">Add device</a>
+
+{% endblock %}
+
+{% block search %}
+    <div style="float:right; margin-right:10px; margin-top:10px">
+        {% include "IPAM/devicesearch.html.twig" %}
+    </div>
+{% endblock %}

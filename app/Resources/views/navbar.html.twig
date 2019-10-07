@@ -1,0 +1,56 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark ">
+      <a class="navbar-brand" href="#">IPAM Address Manager</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>   
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{path('networklist', {'customerid': app.session.get('context_id')})}}">Networks</a>
+          </li> 
+       <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Utils
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{{path('devicelist')}}">Devices</a>
+          <a class="dropdown-item" href="{{path('customerlist')}}">Customers</a>
+          <a class="dropdown-item" href="{{path('ownerlist')}}">Owners</a>
+          <a class="dropdown-item" href="{{path('typelist')}}">Types</a>
+        </div>
+      </li>
+      <li class="nav-item">
+            <a class="nav-link" href="{{path('search')}}">Searcher</a>
+          </li>    
+        </ul>
+        <ul class="navbar-nav ">
+               
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                   
+                        {% if app.session.get('context_id') %}
+                         <li class="nav-item">
+                            <a class="nav-link btn btn-outline-light" style="color:white; margin-right:10px" href="{{ path('customerenumerate') }}">Context: {{ app.session.get('context_name') }}</a>
+                        </li>
+                        {% endif%}
+                    <span class="navbar-text" style="margin-right:10px">{{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} </span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('fos_user_security_logout') }}"><i class="fas fa-sign-out-alt"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('fos_user_profile_show') }}"><i class="fas fa-user-circle"></i></a>
+                    </li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link"  href="{{ path('fos_user_security_login') }}"><i class="fas fa-sign-in-alt"></i></a></li>
+                {% endif %}  
+          
+         </ul>  
+
+  
+</nav>
+
+                   
+
+
+
+
+      
