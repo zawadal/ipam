@@ -1,0 +1,14 @@
+{% if search is defined %}
+    <a title="Remove search" href="{{path('addresslist', {'id': network})}}" class=" btn btn-sm btn-outline-danger"><i class="fas fa-minus-circle fa-sm text-danger"></i>           Remove search</a>
+{% else %}
+        <nav class="navbar navbar-light bg-light justify-content-between">
+            <form class="form-inline" method="post" role="form" action="{{path('addresslist', {'id': network})}}" >    
+                        <div class="form-group">
+                            <input type="hidden" name="network" value="{{network}}" />
+                            <input class="form-control form-control-sm" type="search" name="search" placeholder="Address search"/>
+                            <button  class="form-control btn btn-sm btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        </div>      
+            </form>  
+        </nav>
+
+{% endif %}

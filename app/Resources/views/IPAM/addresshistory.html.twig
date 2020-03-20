@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+ <div class="container">
+    <div class="row mt-2">
+        <p><h2>Found {{historyCount}} historical value/s for this IP address:</h2></p>
+    </div>
+    <div class="row">
+              {% if not history %}
+                  There is no history for this record - probably IP was never used previously. 
+              {% else %}    
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Reclaim date</th>
+                            <th scope="col">Hostname</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Type</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for element in history %}
+                                <tr>
+                                  <td>{{element.modifyDate|date('d-m-Y H:i')}}</td>
+                                  <td>{{element.device.hostname}}</td>
+                                  <td>{{element.description}}</td>
+                                  <td>
+                                   {% if element.type == 0 %}
+                                      <span class="badge badge-pill badge-success">Free</span>
+                                  {% elseif element.type == 1 %}
+                                      <span class="badge badge-pill badge-warning">IPAM - static</span>
+                                  {% elseif element.type == 2 %}
+                                      <span class="badge badge-pill badge-primary">DHCP - reserved</span>
+                                  {% elseif element.type == 3 %}
+                                      <span class="badge badge-pill badge-info">DHCP - dynamic</span>  
+                                  {% endif %}
+                                  </td>
+                                  <td><a href="{{path('addressrollback', {'id': element.id})}}" class="btn btn-dark btn-sm">Rollback</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+            {% endif %}
+    </div>
+  </div>
+ <a href=" {{path('addresslist', {'id': network})}} "class="btn btn-primary">Back</a>
+    
+{% endblock %}

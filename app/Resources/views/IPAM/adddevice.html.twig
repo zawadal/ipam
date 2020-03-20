@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme form _self %}
+
+{% block _device_add_form_owner_row %}
+    <div>
+        {{ form_label(form) }}
+        {{ form_errors(form) }}
+        <p>
+            <a class="btn btn-sm btn-success" href="{{path('addowner')}}">Add new owner</a>
+        </p>
+        {{ form_widget(form) }}
+    </div>
+{% endblock %}
+
+{% block body %}
+    <h6>Device adding</h6>
+        {{form_start(form)}}
+            {{ form_row(form.hostname)}}
+            {{ form_row(form.description)}}
+            {{ form_row(form.mac)}}
+            {{ form_row(form.serial)}}
+            {{ form_row(form.warranty)}}
+            {{ form_row(form.type)}}
+            {{ form_row(form.owner)}}
+        {{form_end(form)}}
+
+{% endblock %}

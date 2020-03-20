@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+{{ form_start(form) }}
+    {{form_row(form.net)}}
+    {{form_row(form.netmask)}}
+    {{form_row(form.vlanId)}}
+    {{form_row(form.description)}}
+    {{form_row(form.add, { 'label': 'Add network' }) }}
+{{ form_end(form) }}
+
+{% endblock %}

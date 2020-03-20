@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+        {{form_start(form)}}
+            {{ form_row(form.searchclass)}}
+            {{ form_row(form.searchtype)}}
+            {{ form_row(form.searchphrase)}}
+            <br>
+            {{ form_row(form.search)}}
+        {{form_end(form)}}
+        
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        var $searchclass = $('#search_form_searchclass')
+        $searchclass.change(function() {
+          var $form = $(this).closest('form');
+          var data = {};
+          data[$searchclass.attr('name')] = $searchclass.val();
+          $.ajax({
+            url : $form.attr('action'),
+            type: $form.attr('method'),
+            data : data,
+            success: function(html) {
+              $('#search_form_searchtype').replaceWith(
+                $(html).find('#search_form_searchtype')
+              );
+              document.getElementById("search_form_searchphrase").disabled = false;
+            }
+          });
+         
+        });
+    </script>
+{% endblock %}
