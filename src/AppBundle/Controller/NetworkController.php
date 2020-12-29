@@ -125,13 +125,13 @@ class NetworkController extends Controller
 #		   $newdhcpconfig = $dhcp->addIpsToDhcpRangeConfig($network->getNet(), $calculator->getSubnetMask(),  file_get_contents('/etc/dhcp/dhcpd.conf'), ['10.0.1.8']);
 		   #$newdhcpconfig = $dhcp->addDhcpHostConfig($network->getNet(), $calculator->getSubnetMask(),  file_get_contents('/etc/dhcp/dhcpd.conf'), 'morelka01');
 		   #$newdhcpconfig = $dhcp->deleteDhcpHostConfig($network->getNet(), $calculator->getSubnetMask(),  file_get_contents('/etc/dhcp/dhcpd.conf'), 'morelka01');
-		   $newdhcpconfig = $dhcp->deleteIpsFromDhcpRangeConfig('10.0.1.0', '255.255.255.0', file_get_contents('/etc/dhcp/dhcpd.conf'), ['10.0.1.8']);
-		   if($newdhcpconfig)
+		   #$newdhcpconfig = $dhcp->deleteIpsFromDhcpRangeConfig('10.0.1.0', '255.255.255.0', file_get_contents('/etc/dhcp/dhcpd.conf'), ['10.0.1.8']);
+		   if(isset($newdhcpconfig) and $newdhcpconfig)
 		   {
 			file_put_contents('/etc/dhcp/dhcpd.conf', trim($newdhcpconfig));
 		   }
-		   var_dump($newdhcpconfig);
-		   die();
+		   #var_dump($newdhcpconfig);
+		   #die();
 		   $network->setCustomer($em->getRepository('AppBundle:Customer')->find($this->get('session')->get('context_id')));
                    $network->setFirstAddress($calculator->getFirstAddress());
                    $network->setLastAddress($calculator->getLastAddress());
