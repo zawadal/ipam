@@ -170,18 +170,20 @@ class CustomerController extends Controller
     public function customerEnumerateAction(Request $request)
     {
         $em = $this->GetDoctrine()->GetManager();
-        $allcustomers = $em->GetRepository('AppBundle:Customer')->findAll();
+	$allcustomers = $em->GetRepository('AppBundle:Customer')->findAll();
+	$tablicza = [];
         foreach($allcustomers as $customer)
         {
             $tablicza[$customer->getName()] = $customer->getId();
-        }
-        $form = $this->createFormBuilder($tablicza)
+	}
+	 $form = $this->createFormBuilder($tablicza)
             ->add('customer', ChoiceType::class, array(
                 'choices' =>  $tablicza,
                 'attr' => ['class' => 'form-control', 'style' => 'margin-bottom:15px'],
             ))
             ->add('context', SubmitType::class, array('label' => 'Add to context', 'attr' => ['class' => 'form-control', 'style' => 'margin-bottom:15px']))
-            ->getForm();
+	    ->getForm();
+	
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid())
          {
