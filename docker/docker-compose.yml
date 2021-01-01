@@ -1,0 +1,45 @@
+version: "3"
+services:
+    webserver:
+        build: 
+           context: "."
+           dockerfile: "Dockerfile-nginx"
+        volumes:
+                - "/srv/ipam/:/var/www/ipam/"
+        ports:
+                - "8088:80"
+        networks: 
+                - "symfony"
+        depends_on:
+                - php
+                - db
+    php:
+        build: 
+           context: "."
+           dockerfile: "Dockerfile-php" 
+        environment:
+                - MYSQL_HOST=db
+                - MYSQL_DB=${MYSQL_DB}
+                - MYSQL_PASS=${MYSQL_PASS}
+        expose:
+                - "9000"
+        volumes:
+                - "/srv/ipam/:/var/www/ipam/"
+        networks:
+                - "symfony"
+        links:
+                - db
+    db:
+        image: mysql/mysql-server:latest
+        environment:
+                - MYSQL_DATABASE=${MYSQL_DB}
+                - MYSQL_ROOT_PASSWORD=${MYSQL_PASS}
+                - MYSQL_ROOT_HOST=%
+        expose:
+                - "3306"
+        volumes:
+                - ./mysql:/var/lib/mysql
+        networks:
+                - "symfony" 
+networks:
+        symfony:
